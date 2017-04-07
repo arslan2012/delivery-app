@@ -1,0 +1,11 @@
+**/xcuserdata/
+
+**/.idea/
+
+/app source/Pods/
+
+/server source/node/
+
+/server source/node_modules/
+
+/server source/target/

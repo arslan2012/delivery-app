@@ -1,11 +1,26 @@
+*.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
+# Thumbnails
+._*
+
+# mac os temp file
+~$**
+
+# xcode user config
 **/xcuserdata/
 
+# Intellij idea config
 **/.idea/
 
+# app dependencies
 /app source/Pods/
 
+# server dependencies
 /server source/node/
-
 /server source/node_modules/
-
 /server source/target/

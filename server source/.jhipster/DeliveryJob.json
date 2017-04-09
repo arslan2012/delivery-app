@@ -1,0 +1,23 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "address",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "longitude",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "latitude",
+            "fieldType": "Double"
+        }
+    ],
+    "changelogDate": "20170407090229",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "delivery_job",
+    "pagination": "pagination"
+}

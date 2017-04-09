@@ -42,6 +42,7 @@ public class CacheConfiguration {
             cm.createCache(tech.arslan2012.server.domain.User.class.getName() + ".authorities", jcacheConfiguration);
             cm.createCache(tech.arslan2012.server.domain.PersistentToken.class.getName(), jcacheConfiguration);
             cm.createCache(tech.arslan2012.server.domain.User.class.getName() + ".persistentTokens", jcacheConfiguration);
+            cm.createCache(tech.arslan2012.server.domain.DeliveryJob.class.getName(), jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }

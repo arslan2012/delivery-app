@@ -4,7 +4,6 @@ import tech.arslan2012.server.DeliveryApp;
 
 import tech.arslan2012.server.domain.DeliveryJob;
 import tech.arslan2012.server.repository.DeliveryJobRepository;
-import tech.arslan2012.server.service.DeliveryJobService;
 import tech.arslan2012.server.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -51,9 +50,6 @@ public class DeliveryJobResourceIntTest {
     private DeliveryJobRepository deliveryJobRepository;
 
     @Autowired
-    private DeliveryJobService deliveryJobService;
-
-    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -72,7 +68,7 @@ public class DeliveryJobResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        DeliveryJobResource deliveryJobResource = new DeliveryJobResource(deliveryJobService);
+        DeliveryJobResource deliveryJobResource = new DeliveryJobResource(deliveryJobRepository);
         this.restDeliveryJobMockMvc = MockMvcBuilders.standaloneSetup(deliveryJobResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -181,8 +177,7 @@ public class DeliveryJobResourceIntTest {
     @Transactional
     public void updateDeliveryJob() throws Exception {
         // Initialize the database
-        deliveryJobService.save(deliveryJob);
-
+        deliveryJobRepository.saveAndFlush(deliveryJob);
         int databaseSizeBeforeUpdate = deliveryJobRepository.findAll().size();
 
         // Update the deliveryJob
@@ -228,8 +223,7 @@ public class DeliveryJobResourceIntTest {
     @Transactional
     public void deleteDeliveryJob() throws Exception {
         // Initialize the database
-        deliveryJobService.save(deliveryJob);
-
+        deliveryJobRepository.saveAndFlush(deliveryJob);
         int databaseSizeBeforeDelete = deliveryJobRepository.findAll().size();
 
         // Get the deliveryJob

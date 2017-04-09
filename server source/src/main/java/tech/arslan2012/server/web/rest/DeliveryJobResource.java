@@ -2,7 +2,8 @@ package tech.arslan2012.server.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import tech.arslan2012.server.domain.DeliveryJob;
-import tech.arslan2012.server.service.DeliveryJobService;
+
+import tech.arslan2012.server.repository.DeliveryJobRepository;
 import tech.arslan2012.server.web.rest.util.HeaderUtil;
 import tech.arslan2012.server.web.rest.util.PaginationUtil;
 import io.swagger.annotations.ApiParam;
@@ -32,10 +33,10 @@ public class DeliveryJobResource {
 
     private static final String ENTITY_NAME = "deliveryJob";
         
-    private final DeliveryJobService deliveryJobService;
+    private final DeliveryJobRepository deliveryJobRepository;
 
-    public DeliveryJobResource(DeliveryJobService deliveryJobService) {
-        this.deliveryJobService = deliveryJobService;
+    public DeliveryJobResource(DeliveryJobRepository deliveryJobRepository) {
+        this.deliveryJobRepository = deliveryJobRepository;
     }
 
     /**
@@ -52,7 +53,7 @@ public class DeliveryJobResource {
         if (deliveryJob.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new deliveryJob cannot already have an ID")).body(null);
         }
-        DeliveryJob result = deliveryJobService.save(deliveryJob);
+        DeliveryJob result = deliveryJobRepository.save(deliveryJob);
         return ResponseEntity.created(new URI("/api/delivery-jobs/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -74,7 +75,7 @@ public class DeliveryJobResource {
         if (deliveryJob.getId() == null) {
             return createDeliveryJob(deliveryJob);
         }
-        DeliveryJob result = deliveryJobService.save(deliveryJob);
+        DeliveryJob result = deliveryJobRepository.save(deliveryJob);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, deliveryJob.getId().toString()))
             .body(result);
@@ -90,7 +91,7 @@ public class DeliveryJobResource {
     @Timed
     public ResponseEntity<List<DeliveryJob>> getAllDeliveryJobs(@ApiParam Pageable pageable) {
         log.debug("REST request to get a page of DeliveryJobs");
-        Page<DeliveryJob> page = deliveryJobService.findAll(pageable);
+        Page<DeliveryJob> page = deliveryJobRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/delivery-jobs");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -105,7 +106,7 @@ public class DeliveryJobResource {
     @Timed
     public ResponseEntity<DeliveryJob> getDeliveryJob(@PathVariable Long id) {
         log.debug("REST request to get DeliveryJob : {}", id);
-        DeliveryJob deliveryJob = deliveryJobService.findOne(id);
+        DeliveryJob deliveryJob = deliveryJobRepository.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(deliveryJob));
     }
 
@@ -119,7 +120,7 @@ public class DeliveryJobResource {
     @Timed
     public ResponseEntity<Void> deleteDeliveryJob(@PathVariable Long id) {
         log.debug("REST request to delete DeliveryJob : {}", id);
-        deliveryJobService.delete(id);
+        deliveryJobRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 

@@ -11,6 +11,9 @@ import AVFoundation
 import QRCodeReader
 
 class ViewController: UIViewController, QRCodeReaderViewControllerDelegate {
+	@IBOutlet weak var addressLabel: UILabel!
+	@IBOutlet weak var qrScanButton: UIButton!
+	var currentJob:deliveryJob? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,7 +43,13 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate {
         // Or by using the closure pattern
         readerVC.completionBlock = { (result: QRCodeReaderResult?) in
             print(result ?? "")
-			print(result?.value)
+			if let ObjectString = result?.value {
+				deliveryJob.verifyThenCreate(ObjectString){ (result) -> Void in
+					self.currentJob = result
+					print(self.currentJob!.address)
+					self.addressLabel.text = self.currentJob!.address
+				}
+			}
         }
 
         // Presents the readerVC as modal form sheet

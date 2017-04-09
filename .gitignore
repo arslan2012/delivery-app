@@ -24,3 +24,4 @@ Icon
 /server source/node/
 /server source/node_modules/
 /server source/target/
+bower_components/

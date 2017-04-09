@@ -36,6 +36,7 @@
         <javassist.version>3.21.0-GA</javassist.version>
         <jcache.version>1.0.0</jcache.version>
         <jhipster.server.version>1.1.2</jhipster.server.version>
+        <jjwt.version>0.7.0</jjwt.version>
         <liquibase-hibernate5.version>3.6</liquibase-hibernate5.version>
         <liquibase-slf4j.version>2.0.0</liquibase-slf4j.version>
         <logstash-logback-encoder.version>4.9</logstash-logback-encoder.version>
@@ -319,6 +320,11 @@
                     <artifactId>spring-boot-starter-tomcat</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jjwt.version}</version>
         </dependency>
         <!-- Spring Cloud -->
         <dependency>
@@ -611,6 +617,8 @@
                                         <goals>
                                             <goal>install-node-and-yarn</goal>
                                             <goal>yarn</goal>
+                                            <goal>bower</goal>
+                                            <goal>gulp</goal>
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
@@ -636,40 +644,6 @@
             <properties>
                 <profile.swagger>,swagger</profile.swagger>
             </properties>
-        </profile>
-        <profile>
-            <id>webpack</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.github.eirslett</groupId>
-                        <artifactId>frontend-maven-plugin</artifactId>
-                        <version>${frontend-maven-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>install node and yarn</id>
-                                <goals>
-                                    <goal>install-node-and-yarn</goal>
-                                </goals>
-                                <configuration>
-                                    <nodeVersion>${node.version}</nodeVersion>
-                                    <yarnVersion>${yarn.version}</yarnVersion>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>webpack build dev</id>
-                                <goals>
-                                    <goal>yarn</goal>
-                                </goals>
-                                <phase>generate-resources</phase>
-                                <configuration>
-                                    <arguments>run webpack:build:dev</arguments>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
         <profile>
             <id>dev</id>
@@ -771,13 +745,31 @@
                                 </configuration>
                             </execution>
                             <execution>
-                                <id>webpack build prod</id>
+                                <id>bower install</id>
                                 <goals>
-                                    <goal>yarn</goal>
+                                    <goal>bower</goal>
                                 </goals>
-                                <phase>generate-resources</phase>
                                 <configuration>
-                                    <arguments>run webpack:prod</arguments>
+                                    <arguments>install --no-color</arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>gulp build</id>
+                                <goals>
+                                    <goal>gulp</goal>
+                                </goals>
+                                <configuration>
+                                    <arguments>build --no-notification</arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>gulp test</id>
+                                <goals>
+                                    <goal>gulp</goal>
+                                </goals>
+                                <phase>test</phase>
+                                <configuration>
+                                    <arguments>test --no-notification</arguments>
                                 </configuration>
                             </execution>
                         </executions>

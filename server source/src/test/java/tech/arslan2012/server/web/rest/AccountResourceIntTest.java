@@ -4,7 +4,6 @@ import tech.arslan2012.server.DeliveryApp;
 import tech.arslan2012.server.domain.Authority;
 import tech.arslan2012.server.domain.User;
 import tech.arslan2012.server.repository.AuthorityRepository;
-import tech.arslan2012.server.repository.PersistentTokenRepository;
 import tech.arslan2012.server.repository.UserRepository;
 import tech.arslan2012.server.security.AuthoritiesConstants;
 import tech.arslan2012.server.service.MailService;
@@ -52,9 +51,6 @@ public class AccountResourceIntTest {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private PersistentTokenRepository persistentTokenRepository;
-
     @Mock
     private UserService mockUserService;
 
@@ -71,10 +67,10 @@ public class AccountResourceIntTest {
         doNothing().when(mockMailService).sendActivationEmail(anyObject());
 
         AccountResource accountResource =
-            new AccountResource(userRepository, userService, mockMailService, persistentTokenRepository);
+            new AccountResource(userRepository, userService, mockMailService);
 
         AccountResource accountUserMockResource =
-            new AccountResource(userRepository, mockUserService, mockMailService, persistentTokenRepository);
+            new AccountResource(userRepository, mockUserService, mockMailService);
 
         this.restMvc = MockMvcBuilders.standaloneSetup(accountResource).build();
         this.restUserMockMvc = MockMvcBuilders.standaloneSetup(accountUserMockResource).build();

@@ -15,9 +15,9 @@
             "fieldType": "Double"
         }
     ],
-    "changelogDate": "20170407090229",
+    "changelogDate": "20170409085246",
     "dto": "no",
-    "service": "serviceClass",
+    "service": "no",
     "entityTableName": "delivery_job",
-    "pagination": "pagination"
+    "pagination": "infinite-scroll"
 }

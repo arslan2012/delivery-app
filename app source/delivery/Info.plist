@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>Server Host Name</key>
-	<string>http://10.206.14.105:8080/</string>
+	<string>http://10.206.14.107:8080/</string>
 	<key>NSCameraUsageDescription</key>
 	<string>请授权使用摄像头来扫描二维码</string>
 	<key>CFBundleDevelopmentRegion</key>

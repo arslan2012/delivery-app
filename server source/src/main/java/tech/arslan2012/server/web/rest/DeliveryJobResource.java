@@ -1,6 +1,8 @@
 package tech.arslan2012.server.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import tech.arslan2012.server.domain.DeliveryJob;
 
 import tech.arslan2012.server.repository.DeliveryJobRepository;
@@ -32,8 +34,9 @@ public class DeliveryJobResource {
     private final Logger log = LoggerFactory.getLogger(DeliveryJobResource.class);
 
     private static final String ENTITY_NAME = "deliveryJob";
-        
+
     private final DeliveryJobRepository deliveryJobRepository;
+    private DeliveryJob deliveryJob;
 
     public DeliveryJobResource(DeliveryJobRepository deliveryJobRepository) {
         this.deliveryJobRepository = deliveryJobRepository;
@@ -94,6 +97,15 @@ public class DeliveryJobResource {
         Page<DeliveryJob> page = deliveryJobRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/delivery-jobs");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/delivery-jobs/get-new")
+    @Timed
+    public ResponseEntity<DeliveryJob> getAllDeliveryJobs() {
+        log.debug("REST request to get a new DeliveryJob");
+        Page<DeliveryJob> page = deliveryJobRepository.findAll(new PageRequest(0, 1, Sort.Direction.ASC, "id"));
+        DeliveryJob deliveryJob = page.getContent().get(0);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(deliveryJob));
     }
 
     /**

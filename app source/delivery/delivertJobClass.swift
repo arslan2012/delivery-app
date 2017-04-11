@@ -13,18 +13,37 @@ import CoreData
 
 let managedContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
+public enum DeliveryState: Int16 {
+    case startup, jobAcquired, QRscaned, jobStarted
+}
+
 public class deliveryJob: NSManagedObject {
     @NSManaged private(set) public var id: Int32
     @NSManaged private(set) public var address: String
     @NSManaged private(set) public var longitude: Double
     @NSManaged private(set) public var latitude: Double
-	private convenience init(fromJSON json: JSON) {
-		let entity = NSEntityDescription.entity(forEntityName: "DeliveryJob", in: managedContext)!
-		self.init(entity: entity, insertInto: managedContext)
+    @NSManaged private var state: Int16
+    var stateEnum: DeliveryState {                    //  ↓ If self.state is invalid.
+        get {
+            return DeliveryState(rawValue: self.state) ?? .startup
+        }
+        set {
+            self.state = newValue.rawValue
+            do {
+                try managedContext.save()
+            } catch {
+                fatalError("Failure to save context: \(error)")
+            }
+        }
+    }
+    private convenience init(fromJSON json: JSON) {
+        let entity = NSEntityDescription.entity(forEntityName: "DeliveryJob", in: managedContext)!
+        self.init(entity: entity, insertInto: managedContext)
         self.id = json["id"].int32Value
         self.address = json["address"].stringValue
         self.longitude = json["longitude"].doubleValue
         self.latitude = json["latitude"].doubleValue
+        self.stateEnum = .startup
     }
 
     class func CreateFromQR(_ ObjectString: String) -> deliveryJob? {
@@ -57,31 +76,33 @@ public class deliveryJob: NSManagedObject {
                     if let resultJsonValue = response.result.value {
                         let resultJson = JSON(resultJsonValue)
                         print(resultJson["id"].stringValue)
-						let result = deliveryJob(fromJSON: resultJson)
-						do {
-							try managedContext.save()
-						} catch {
-							fatalError("Failure to save context: \(error)")
-						}
+                        let result = deliveryJob(fromJSON: resultJson)
+                        do {
+                            try managedContext.save()
+                        } catch {
+                            fatalError("Failure to save context: \(error)")
+                        }
                         handler(result)
                     } else {
                         handler(nil)
                     }
                 }
     }
-	class func getFromDatabase() -> deliveryJob? {
-		var result:deliveryJob? = nil
-		do {
-			result = try managedContext.fetch(NSFetchRequest(entityName: "DeliveryJob"))[0] as? deliveryJob
-		} catch let error as NSError {
-			print("Could not fetch. \(error), \(error.userInfo)")
-		}
-		return result
-	}
-	public static func ==(lhs: deliveryJob, rhs: deliveryJob) -> Bool {
-		return lhs.id == rhs.id &&
-			lhs.address == rhs.address &&
-			(lhs.longitude - rhs.longitude < 1e-6) &&
-			(lhs.latitude - rhs.latitude < 1e-6)
-	}
+
+    class func getFromDatabase() -> deliveryJob? {
+        var result: deliveryJob? = nil
+        do {
+            result = try managedContext.fetch(NSFetchRequest(entityName: "DeliveryJob"))[0] as? deliveryJob
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        return result
+    }
+
+    public static func ==(lhs: deliveryJob, rhs: deliveryJob) -> Bool {
+        return lhs.id == rhs.id &&
+                lhs.address == rhs.address &&
+                (lhs.longitude - rhs.longitude < 1e-6) &&
+                (lhs.latitude - rhs.latitude < 1e-6)
+    }
 }

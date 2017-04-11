@@ -8,27 +8,27 @@
 
 import UIKit
 import AVFoundation
+import CoreLocation
 import QRCodeReader
 
-
-enum DeliveryState {
-    case startup, jobAcquired, QRscaned, jobStarted
-}
-
-class ViewController: UIViewController, QRCodeReaderViewControllerDelegate {
+class ViewController: UIViewController, QRCodeReaderViewControllerDelegate, CLLocationManagerDelegate {
     @IBOutlet weak var addressLabel: UILabel!
     @IBOutlet weak var idLabel: UILabel!
     @IBOutlet weak var qrScanButton: UIButton!
     @IBOutlet weak var startDeliveryButton: UIButton!
     var currentJob: deliveryJob? = nil
-    var currentState: DeliveryState = .startup
+	let locationManager = CLLocationManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+		//initialize GPS
+		locationManager.delegate = self
+		locationManager.desiredAccuracy = kCLLocationAccuracyBest
+		
+		//restore delivery status from local data
 		currentJob = deliveryJob.getFromDatabase()
 		if currentJob != nil {
-			self.addressLabel.text = self.currentJob!.address
-			self.idLabel.text = String(self.currentJob!.id)
+			transitToState((currentJob?.stateEnum)!)
 		}
     }
 
@@ -41,10 +41,7 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate {
     @IBAction func newJobRequested(_ sender: UIButton) {
         deliveryJob.CreateFromServer() { (result) -> Void in
             self.currentJob = result
-            print(self.currentJob!.address)
-            self.addressLabel.text = self.currentJob!.address
-            self.idLabel.text = String(self.currentJob!.id)
-            self.currentState = .jobAcquired
+            self.transitToState(.jobAcquired)
         }
     }
 
@@ -58,11 +55,10 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate {
             print(result ?? "")
             if let ObjectString = result?.value {
                 let qrJob = deliveryJob.CreateFromQR(ObjectString)
-                if qrJob == self.currentJob {
-                    self.qrScanButton.isHidden = true
-                    self.startDeliveryButton.isHidden = false
-                    self.currentState = .QRscaned
-                }
+                if qrJob! == self.currentJob! {
+                    self.transitToState(.QRscaned)
+				} else {
+				}
             }
         }
 
@@ -70,6 +66,45 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate {
         readerVC.modalPresentationStyle = .formSheet
         present(readerVC, animated: true, completion: nil)
     }
+	
+	@IBAction func startDeliveryClicked(_ sender:AnyObject) {
+		transitToState(.jobStarted)
+	}
+	
+	func transitToState(_ state:DeliveryState) {
+		switch state {
+		case .startup:
+			self.addressLabel.text = "暂无"
+			self.idLabel.text = "暂无"
+			self.qrScanButton.isHidden = false
+			self.startDeliveryButton.isHidden = true
+			self.currentJob?.stateEnum = .startup
+			break
+		case .jobAcquired:
+			self.addressLabel.text = self.currentJob!.address
+			self.idLabel.text = String(self.currentJob!.id)
+			self.qrScanButton.isHidden = false
+			self.startDeliveryButton.isHidden = true
+			self.currentJob?.stateEnum = .jobAcquired
+			break
+		case .QRscaned:
+			self.addressLabel.text = self.currentJob!.address
+			self.idLabel.text = String(self.currentJob!.id)
+			self.qrScanButton.isHidden = true
+			self.startDeliveryButton.isHidden = false
+			self.currentJob?.stateEnum = .QRscaned
+			break
+		case .jobStarted:
+			locationManager.requestWhenInUseAuthorization()
+			locationManager.startUpdatingLocation()
+			self.addressLabel.text = self.currentJob!.address
+			self.idLabel.text = String(self.currentJob!.id)
+			self.qrScanButton.isHidden = true
+			self.startDeliveryButton.isHidden = true
+			self.currentJob?.stateEnum = .jobStarted
+			break
+		}
+	}
 
 
     // Good practice: create the reader lazily to avoid cpu overload during the
@@ -103,7 +138,17 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate {
 
         dismiss(animated: true, completion: nil)
     }
-
-
+	
+	func locationManager(_ manager: CLLocationManager,
+	                     didUpdateLocations locations: [CLLocation]){
+		let latestLocation = locations[locations.count - 1]
+		print(latestLocation.coordinate.longitude)
+		print(latestLocation.coordinate.latitude)
+	}
+	
+	func locationManager(_ manager: CLLocationManager,
+	                     didFailWithError error: Error) {
+		
+	}
 }
 

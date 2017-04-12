@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B621ED61E9E314C0018BE43 /* CheckIfPointIsNearLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B621ED51E9E314C0018BE43 /* CheckIfPointIsNearLine.swift */; };
 		1BB5B5DF1E99E50D005C042F /* delivertJobClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB5B5DE1E99E50D005C042F /* delivertJobClass.swift */; };
 		1BB5B5E11E99EA9D005C042F /* getServerFromInfoPlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB5B5E01E99EA9D005C042F /* getServerFromInfoPlist.swift */; };
 		1BB622D71E9765B200CAD30C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB622D61E9765B200CAD30C /* AppDelegate.swift */; };
@@ -38,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1B621ED51E9E314C0018BE43 /* CheckIfPointIsNearLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckIfPointIsNearLine.swift; sourceTree = "<group>"; };
 		1BB5B5DE1E99E50D005C042F /* delivertJobClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = delivertJobClass.swift; sourceTree = "<group>"; };
 		1BB5B5E01E99EA9D005C042F /* getServerFromInfoPlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = getServerFromInfoPlist.swift; sourceTree = "<group>"; };
 		1BB622D31E9765B200CAD30C /* delivery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = delivery.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -127,6 +129,7 @@
 				1BB622DD1E9765B200CAD30C /* delivery.xcdatamodeld */,
 				1BB5B5DE1E99E50D005C042F /* delivertJobClass.swift */,
 				1BB5B5E01E99EA9D005C042F /* getServerFromInfoPlist.swift */,
+				1B621ED51E9E314C0018BE43 /* CheckIfPointIsNearLine.swift */,
 			);
 			path = delivery;
 			sourceTree = "<group>";
@@ -344,6 +347,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B621ED61E9E314C0018BE43 /* CheckIfPointIsNearLine.swift in Sources */,
 				1BB622DF1E9765B200CAD30C /* delivery.xcdatamodeld in Sources */,
 				1BB5B5DF1E99E50D005C042F /* delivertJobClass.swift in Sources */,
 				1BB622D91E9765B200CAD30C /* ViewController.swift in Sources */,

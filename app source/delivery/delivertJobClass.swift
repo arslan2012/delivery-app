@@ -92,12 +92,26 @@ public class deliveryJob: NSManagedObject {
     class func getFromDatabase() -> deliveryJob? {
         var result: deliveryJob? = nil
         do {
-            result = try managedContext.fetch(NSFetchRequest(entityName: "DeliveryJob"))[0] as? deliveryJob
+			let results = try managedContext.fetch(NSFetchRequest(entityName: "DeliveryJob"))
+			if results.count > 0 {
+				result = results[0] as? deliveryJob
+			}
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
         return result
     }
+	
+	class func clearAll() {
+		let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "DeliveryJob")
+		let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetch)
+		do {
+			try managedContext.execute(deleteRequest)
+			try managedContext.save()
+		} catch {
+			print ("There was an error")
+		}
+	}
 
     public static func ==(lhs: deliveryJob, rhs: deliveryJob) -> Bool {
         return lhs.id == rhs.id &&

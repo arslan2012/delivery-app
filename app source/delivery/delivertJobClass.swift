@@ -36,7 +36,7 @@ public class deliveryJob: NSManagedObject {
             }
         }
     }
-    private convenience init(fromJSON json: JSON) {
+    public convenience init(fromJSON json: JSON) {
         let entity = NSEntityDescription.entity(forEntityName: "DeliveryJob", in: managedContext)!
         self.init(entity: entity, insertInto: managedContext)
         self.id = json["id"].int32Value

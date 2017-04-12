@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -99,6 +100,11 @@ public class DeliveryJobResource {
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
+    /**
+     * GET /delivery-jobs/get-new get a job thats not being delivered
+     *
+     * @return deliveryJob
+     */
     @GetMapping("/delivery-jobs/get-new")
     @Timed
     public ResponseEntity<DeliveryJob> getAllDeliveryJobs() {
@@ -106,6 +112,32 @@ public class DeliveryJobResource {
         Page<DeliveryJob> page = deliveryJobRepository.findAll(new PageRequest(0, 1, Sort.Direction.ASC, "id"));
         DeliveryJob deliveryJob = page.getContent().get(0);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(deliveryJob));
+    }
+
+    @PostMapping("/delivery-jobs/check-delivery")
+    @Timed
+    public ResponseEntity<DeliveryJob> checkDeliveryJob(@RequestBody DeliveryJob deliveryJob) throws URISyntaxException {
+        log.debug("REST request to check DeliveryJob");
+        DeliveryJob localDeliveryJob = deliveryJobRepository.findOne(deliveryJob.getId());
+        if (localDeliveryJob.getAddress().equals(deliveryJob.getAddress()) &&
+            localDeliveryJob.getLongitude().equals(deliveryJob.getLongitude()) &&
+            localDeliveryJob.getLatitude().equals(deliveryJob.getLatitude())) {
+            return ResponseEntity.ok()
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, localDeliveryJob.getId().toString()))
+                .body(localDeliveryJob);
+        } else {
+            return ResponseEntity.status(460)
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, localDeliveryJob.getId().toString()))
+                .body(localDeliveryJob);
+        }
+    }
+
+    @PostMapping("/delivery-jobs/check-location")
+    @Timed
+    public ResponseEntity<?> checkDeliveryLocation(@RequestBody Map<String, Double> payload) throws URISyntaxException {
+        log.debug("REST request to check Delivery location");
+        log.debug(payload.toString());
+        return ResponseEntity.ok().body(null);
     }
 
     /**

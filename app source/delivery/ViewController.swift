@@ -10,6 +10,8 @@ import UIKit
 import AVFoundation
 import CoreLocation
 import QRCodeReader
+import Alamofire
+import SwiftyJSON
 
 class ViewController: UIViewController, QRCodeReaderViewControllerDelegate, CLLocationManagerDelegate {
     @IBOutlet weak var addressLabel: UILabel!
@@ -66,7 +68,22 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate, CLLo
             if let ObjectString = result?.value {
                 let qrJob = deliveryJob.CreateFromQR(ObjectString)
                 if qrJob! == self.currentJob! {
-                    self.transitToState(.QRscaned)
+					Alamofire.request(getServerFromInfoPlist() + "/api/delivery-jobs/check-delivery")
+						.validate(statusCode: 200..<300)
+						.responseJSON { response in
+							if response.result.isFailure {
+								print("server QR doesnt match error")
+								// TODO incorrect server config error
+								if let resultJsonValue = response.result.value {
+									let resultJson = JSON(resultJsonValue)
+									print(resultJson["id"].stringValue)
+									self.currentJob = deliveryJob(fromJSON: resultJson)
+									//self.transitToState(.startup)
+								} else {
+									self.transitToState(.QRscaned)
+								}
+							}
+					}
                 } else {
                 }
             }
@@ -146,6 +163,13 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate, CLLo
 		}
 		if CheckIfPointIsNearLine(startingLocation, ((currentJob?.longitude)!, (currentJob?.latitude)!), pointToCheck: currentLocation, maxDistance: 100) {
 			//Let server check again
+			Alamofire.request(getServerFromInfoPlist() + "/api/delivery-jobs/check-location")
+				.validate(statusCode: 200..<300)
+				.responseJSON { response in
+					if response.result.isFailure {
+						self.showDistanceIncorectAlert()
+					}
+			}
 		} else {
 			showDistanceIncorectAlert()
 		}

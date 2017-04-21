@@ -68,7 +68,9 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate, CLLo
             if let ObjectString = result?.value {
                 let qrJob = deliveryJob.CreateFromQR(ObjectString)
                 if qrJob! == self.currentJob! {
-					Alamofire.request(getServerFromInfoPlist() + "/api/delivery-jobs/check-delivery")
+					
+					Alamofire.request(getServerFromInfoPlist() + "/api/delivery-jobs/check-delivery"
+						, method: .post, parameters: qrJob?.toAlamoFireParam(), encoding: JSONEncoding.default)
 						.validate(statusCode: 200..<300)
 						.responseJSON { response in
 							if response.result.isFailure {
@@ -82,6 +84,9 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate, CLLo
 								} else {
 									self.transitToState(.QRscaned)
 								}
+							} else {
+								print("QR success")
+								self.transitToState(.QRscaned)
 							}
 					}
                 } else {

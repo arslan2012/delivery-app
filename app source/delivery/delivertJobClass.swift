@@ -119,4 +119,14 @@ public class deliveryJob: NSManagedObject {
                 (lhs.longitude - rhs.longitude < 1e-6) &&
                 (lhs.latitude - rhs.latitude < 1e-6)
     }
+	
+	public func toAlamoFireParam() -> Parameters {
+		let parameters: Parameters = [
+			"id": self.id,
+			"adress": self.address,
+			"longitude": self.longitude,
+			"latitude":self.latitude
+		]
+		return parameters
+	}
 }

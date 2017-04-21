@@ -21,22 +21,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4dN-bE-ohf" userLabel="AfterQRScaned" propertyAccessControl="all">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mfd-Z8-yi6">
-                                        <rect key="frame" x="135" y="28" width="104" height="54"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="开始派送"/>
-                                        <connections>
-                                            <action selector="startDeliveryClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Yt9-p4-wYC"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MXu-OD-CGA" userLabel="StartUp" propertyAccessControl="all">
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MXu-OD-CGA" userLabel="StartUp">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -123,6 +108,14 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FWb-Lc-ISY">
+                                <rect key="frame" x="135" y="28" width="104" height="81"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="开始派送"/>
+                                <connections>
+                                    <action selector="startDeliveryClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rx9-Tb-l1Q"/>
+                                </connections>
+                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text=" 暂无" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PNu-H6-Srx">
                                 <rect key="frame" x="16" y="261" width="343" height="58"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -164,7 +157,7 @@
                         <outlet property="destLongitudeLabel" destination="UC8-A0-9um" id="5j8-6W-qIH"/>
                         <outlet property="idLabel" destination="bTg-2E-QmA" id="q8v-RR-lFy"/>
                         <outlet property="qrScanButton" destination="VKs-D6-2ll" id="r55-Nv-y2A"/>
-                        <outlet property="startDeliveryButton" destination="Mfd-Z8-yi6" id="fjO-60-6Iz"/>
+                        <outlet property="startDeliveryButton" destination="FWb-Lc-ISY" id="tKQ-Qi-igm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

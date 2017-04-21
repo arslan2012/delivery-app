@@ -119,13 +119,16 @@ public class DeliveryJobResource {
     public ResponseEntity<DeliveryJob> checkDeliveryJob(@RequestBody DeliveryJob deliveryJob) throws URISyntaxException {
         log.debug("REST request to check DeliveryJob");
         DeliveryJob localDeliveryJob = deliveryJobRepository.findOne(deliveryJob.getId());
-        if (localDeliveryJob.getAddress().equals(deliveryJob.getAddress()) &&
+        if (//localDeliveryJob.getAddress().equals(deliveryJob.getAddress()) &&
             localDeliveryJob.getLongitude().equals(deliveryJob.getLongitude()) &&
             localDeliveryJob.getLatitude().equals(deliveryJob.getLatitude())) {
             return ResponseEntity.ok()
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, localDeliveryJob.getId().toString()))
                 .body(localDeliveryJob);
         } else {
+            log.debug(localDeliveryJob.getAddress().equals(deliveryJob.getAddress()) ? "true":"false");
+            log.debug(localDeliveryJob.getLongitude().equals(deliveryJob.getLongitude()) ? "true":"false");
+            log.debug(localDeliveryJob.getLatitude().equals(deliveryJob.getLatitude()) ? "true":"false");
             return ResponseEntity.status(460)
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, localDeliveryJob.getId().toString()))
                 .body(localDeliveryJob);

@@ -23,9 +23,9 @@ class deliveryTests: XCTestCase {
         super.tearDown()
     }
     
-//	func testGettingServer() {
-//		let host = delivery.getServerFromInfoPlist()
-//		XCTAssert(host.length > 0)
-//	}
+	func testGettingServer() {
+		let host = delivery.getServerFromInfoPlist()
+		XCTAssert(host.characters.count > 0)
+	}
 	
 }

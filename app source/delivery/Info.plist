@@ -7,7 +7,7 @@
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>请授权使用GPS来监控您的配送</string>
 	<key>Server Host Name</key>
-	<string>http://10.8.201.129:8080/</string>
+	<string>http://10.8.203.25:8080/</string>
 	<key>NSCameraUsageDescription</key>
 	<string>请授权使用摄像头来扫描二维码</string>
 	<key>CFBundleDevelopmentRegion</key>

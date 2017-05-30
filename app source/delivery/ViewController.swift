@@ -23,6 +23,7 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate, CLLo
     @IBOutlet weak var currentLatitudeLabel: UILabel!
     @IBOutlet weak var destLongitudeLabel: UILabel!
     @IBOutlet weak var destLatitudeLabel: UILabel!
+	@IBOutlet weak var speed: UILabel!
     var currentJob: deliveryJob? = nil
     var startingLocation = (x: 0.0, y: 0.0)
     var currentLocation = (x: 0.0, y: 0.0)
@@ -233,6 +234,7 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate, CLLo
         self.currentLocation = (latestLocation.coordinate.longitude, latestLocation.coordinate.latitude)
         self.currentLongitudeLabel.text = String(latestLocation.coordinate.longitude)
         self.currentLatitudeLabel.text = String(latestLocation.coordinate.latitude)
+		self.speed.text = String(latestLocation.speed)
     }
 
     func locationManager(_ manager: CLLocationManager,

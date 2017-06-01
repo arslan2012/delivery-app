@@ -39,6 +39,7 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate, CLLo
         //restore delivery status from local data
         currentJob = deliveryJob.getFromDatabase()
         if currentJob != nil {
+			print(currentJob!.stateEnum)
             transitToState((currentJob?.stateEnum)!)
 		} else {
 			transitToState(.startup)
@@ -68,7 +69,12 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate, CLLo
             print(result ?? "")
             if let ObjectString = result?.value {
                 let qrJob = deliveryJob.CreateFromQR(ObjectString)
-                if qrJob! == self.currentJob! {
+				if self.currentJob == nil {
+					let alert = UIAlertController(title: "Alert", message: "请先获取新任务“！", preferredStyle: UIAlertControllerStyle.alert)
+					alert.addAction(UIAlertAction(title: "知道啦", style: .default, handler: nil))
+					self.present(alert, animated: true, completion: nil)
+				}
+				else if qrJob! == self.currentJob! {
 					
 					Alamofire.request(getServerFromInfoPlist() + "/api/delivery-jobs/check-delivery"
 						, method: .post, parameters: qrJob?.toAlamoFireParam(), encoding: JSONEncoding.default)
@@ -110,8 +116,11 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate, CLLo
 			let deltaY = self.currentLocation.y - coord.latitude
 			let dist = sqrt(abs(pow(deltaX, 2) + pow(deltaY, 2)))
             if dist < 100 {
+				self.locationCheckingTimer?.invalidate()
+				self.locationManager.stopUpdatingLocation()
+				self.currentJob = nil
                 deliveryJob.clearAll()
-				//transitToState(.startup)
+				transitToState(.startup)
             }
 		}
 	}
@@ -159,6 +168,8 @@ class ViewController: UIViewController, QRCodeReaderViewControllerDelegate, CLLo
             }
             self.currentJob?.stateEnum = .jobStarted
             break
+		default:
+			break
         }
     }
 	

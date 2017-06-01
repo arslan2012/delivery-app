@@ -14,7 +14,7 @@ import CoreData
 let managedContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
 public enum DeliveryState: Int16 {
-    case startup, jobAcquired, QRscaned, jobStarted
+    case startup, jobAcquired, QRscaned, jobStarted, nonvalid
 }
 
 public class deliveryJob: NSManagedObject {
@@ -55,7 +55,9 @@ public class deliveryJob: NSManagedObject {
                 // TODO incorrect QR code error
                 return nil
             } else {
-                return deliveryJob(fromJSON: qrJson)
+				let qrJob = deliveryJob(fromJSON: qrJson)
+				qrJob.stateEnum = .nonvalid
+                return qrJob
             }
         } else {
             print("incorrect QR code error2")
@@ -94,7 +96,12 @@ public class deliveryJob: NSManagedObject {
         do {
 			let results = try managedContext.fetch(NSFetchRequest(entityName: "DeliveryJob"))
 			if results.count > 0 {
-				result = results[0] as? deliveryJob
+				for i in (0...(results.count - 1)).reversed() {
+					result = results[i] as? deliveryJob
+					if result?.stateEnum != .nonvalid {
+						break
+					}
+				}
 			}
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
